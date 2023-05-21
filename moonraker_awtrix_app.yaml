@@ -105,7 +105,7 @@ blueprint:
       description: Sets how many times the text should be scrolled through the matrix before the app/notifcation ends.
       default: "4"
 
-  source_url: https://github.com/jeeftor/HomeAssistant/blob/master/blueprints/automation/awtrix_battery_monitor.yaml
+  source_url: https://github.com/RDG88/Homeassistant_Blueprints/blob/main/moonraker_awtrix_app.yaml
 
 variables:
   device_id: !input awtrix
