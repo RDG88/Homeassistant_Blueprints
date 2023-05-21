@@ -45,7 +45,7 @@ blueprint:
           options:
             - label: "Icon doesn't move."
               value: "0"
-            - label: "Icon moves with text and will not appear again."
+            - label: "Icon moves with text and will not reappear."
               value: "1"
             - label: "Icon moves with text but appears again when the text starts."
               value: "2"
@@ -63,11 +63,11 @@ blueprint:
       default: "10"
     repeat:
       name: Repeat
-      description: Sets how many times the text should be scrolled through the matrix before the app/notifcation ends.
+      description: Sets how many times the text should be scrolled through the matrix before the app/notification ends.
       default: "4"
     lifetime:
       name: Lifetime of the app (in seconds)
-      description: Removes the custom app when there is no update after the given time in seconds.\n\n Keep this value higher then 59 seconds to get the AWTRIX app automaticly deleted when disabling the automation.
+      description: Removes the custom app when there is no update after the given time in seconds. Keep this value higher than 59 seconds to get the AWTRIX app automatically deleted when disabling the automation.
       default: "70"
 
 
