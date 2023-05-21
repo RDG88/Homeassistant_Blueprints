@@ -1,6 +1,7 @@
 blueprint:
-  name: "3D Print Statistics"
-  description: "This blueprint will show the status of ur 3d print"
+  name: "AWTRIX 3D Print Status - Moonraker"
+  description: "This blueprint will show the status of your 3d print, with help of the Moonraker HA intergration"
+  source_url: https://github.com/RDG88/Homeassistant_Blueprints/blob/main/moonraker_awtrix_app.yaml
   domain: automation
   input:
     awtrix:
@@ -104,8 +105,6 @@ blueprint:
       name: Repeat
       description: Sets how many times the text should be scrolled through the matrix before the app/notifcation ends.
       default: "4"
-
-  source_url: https://github.com/RDG88/Homeassistant_Blueprints/blob/main/moonraker_awtrix_app.yaml
 
 variables:
   device_id: !input awtrix
