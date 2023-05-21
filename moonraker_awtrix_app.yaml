@@ -15,7 +15,7 @@ blueprint:
           multiple: false
     awtrix_app_name:
       name: AWTRIX Application name
-      description: This is the custom FUCK app name that will be added to AWTRIX, should be unique
+      description: This is the custom app name that will be added to AWTRIX, should be unique
       selector:
         text: {}
       default: 3d_print
@@ -28,8 +28,8 @@ blueprint:
           filter:
             - integration: moonraker
     3dprint_current_state_sensor:
-      name: 3D Print Current State Sensor
-      description: 3D Print Current State sensor
+      name: 3D Print Current Print State Sensor
+      description: 3D Print Current Print State sensor
       selector:
         entity:
           multiple: false
@@ -115,11 +115,11 @@ variables:
   notify_topic: "{{awtrix ~ '/notify'}}"
   sensor_progress: !input 3dprint_progress_sensor
   sensor_current_state: !input 3dprint_current_state_sensor
-  text_color_printing: !input text_color_printing
-  text_color_error: !input text_color_error
-  text_color_paused: !input text_color_paused
-  text_color_canceled: !input text_color_canceled
-  text_color_complete: !input text_color_complete
+  txt_color_printing: !input txt_color_printing
+  txt_color_error: !input txt_color_error
+  txt_color_paused: !input txt_color_paused
+  txt_color_canceled: !input txt_color_canceled
+  txt_color_complete: !input txt_color_complete
   stack_notification: !input stack_notification
   push_icon: !input push_icon
   duration: !input duration
