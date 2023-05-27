@@ -61,13 +61,13 @@ action:
             - conditions:
                 - condition: template
                   value_template: >
-                    {{ states(repeat.item.entity) != "unavailable" and states(repeat.item.entity) != "unknown" }}
+                     {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
               sequence:
                 - service: mqtt.publish
                   data:
                     qos: 0
                     retain: false
-                    topic: "{{ repeat.item.topic ~ '/dev4' }}"
+                    topic: "{{ repeat.item.topic ~ '/dev9' }}"
                     payload: >
                       {
                         "text": "{{ repeat.item }}"
