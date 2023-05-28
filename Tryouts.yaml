@@ -11,3 +11,15 @@ sensor.awtrix1_device_topic
 {{ expand(entities) | selectattr('attributes.friendly_name', 'eq', 'Device topic') | map(attribute='state') | list | join(', ') }}
 
 returns the state of that sensor.
+
+
+Better readable:
+
+{%
+  set topic = expand(entities)
+  | selectattr('attributes.friendly_name', 'eq', 'Device topic')
+  | map(attribute='state')
+  | first
+%}
+
+topic: {{ topic }}
