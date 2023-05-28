@@ -1,0 +1,77 @@
+blueprint:
+  name: "Single awtrix"
+  description: "Single awtrix"
+  domain: automation
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          integration: mqtt
+          manufacturer: Blueforcer
+          model: AWTRIX Light
+          multiple: false
+    message:
+      name: Message
+      description: Message to send to the devices.
+      selector:
+        text:
+
+variables:
+  message: !input message
+  device_id: !input awtrix
+  awtrix_device: >-
+    {%- macro get_device(device_id) %}
+      {{iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name'))}}
+    {% endmacro -%}
+    {%- macro get_entity(device_id) %}
+      {%- set entities = device_entities(device_id) %}
+      {%- set awtrix = namespace(topic=0,device=[],entity=[]) %}
+      {%- set awtrix.device = get_device(device_id) %}
+      {%- for entity in entities %}
+        {%- if is_state_attr(entity, "friendly_name", "Device topic") -%}
+          {%- set awtrix.topic = states(entity) %}
+          {%- set awtrix.entity = entity %}
+        {%- endif %}
+      {%- endfor %}
+      {%- if awtrix.topic == 0 %}
+        {%- set awtrix.topic = get_device(device_id) %}
+      {%- endif %}
+      {{ awtrix }}
+    {% endmacro -%}
+    {%- set ns = namespace(awtrix=[]) %}
+    {%- set awtrix=get_entity(device_id)|replace(' ','')|replace('\n','')|replace('<Namespace','')|replace('>','')|replace('\\n','') %}
+    {% set ns.awtrix = ns.awtrix + [awtrix] %}
+    {% set ns.awtrix = ns.awtrix|replace('"','') %}
+    {{ ns.awtrix }}
+
+
+trigger:
+  - platform: time_pattern
+    minutes: /1
+condition: []
+
+action:
+  - repeat:
+      for_each: "{{ awtrix_device }}"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: >
+                     {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item.topic ~ '/dev10' }}"
+                    payload: >
+                      {
+                        "text": "{{ repeat.item }}"
+                      }
+
+mode: single
+
+
