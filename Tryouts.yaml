@@ -1,1 +1,13 @@
+{% set device_id = 'a8059451c261928b63fef385c9789eda' %}
+{%- set entities = device_entities(device_id) %}
+{{ expand(entities) | selectattr('attributes.friendly_name', 'eq', 'Device topic') | map(attribute='entity_id') | list | join(', ') }}
 
+Returns 1 sensor.
+
+sensor.awtrix1_device_topic
+
+{% set device_id = 'a8059451c261928b63fef385c9789eda' %}
+{%- set entities = device_entities(device_id) %}
+{{ expand(entities) | selectattr('attributes.friendly_name', 'eq', 'Device topic') | map(attribute='state') | list | join(', ') }}
+
+returns the state of that sensor.
