@@ -1,0 +1,54 @@
+blueprint:
+  name: "Single awtrix"
+  description: "Single awtrix"
+  domain: automation
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          integration: mqtt
+          manufacturer: Blueforcer
+          model: AWTRIX Light
+          multiple: false
+    message:
+      name: Message
+      description: Message to send to the devices.
+      selector:
+        text:
+
+variables:
+  message: !input message
+  device_id: !input awtrix
+  awtrix_device: >-
+    {{ iif( device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name') ) }}
+  awtrix_topic: >-
+    {# Retrieve the device topic sensor from the awtrix device based on the friedly_name 'Device Topics', if not fall back to device name of awtrix #}
+    {%
+      set topic = expand(device_entities(device_id))
+      | selectattr('attributes.friendly_name', 'eq', 'Device topic')
+      | map(attribute='state')
+      | first
+      | default('empty')
+    %}
+    {%- if topic == "empty" %}
+      {%- set topic = awtrix_device %}
+    {%- endif %}
+    {{ topic }}
+
+trigger:
+  - platform: time_pattern
+    minutes: /1
+condition: []
+
+action:
+  - service: mqtt.publish
+    data:
+      topic: "{{ awtrix_topic ~ '/dev17'}}"
+      payload: |-
+        {   
+          "text": "{{ awtrix_topic }}"
+        }
+
+mode: single
