@@ -27,7 +27,7 @@ variables:
     {% endmacro -%}
     {%- macro get_entity(device_id) %}
       {%- set entities = device_entities(device_id) %}
-      {%- set awtrix = namespace(topic=0,device=[],entity=[]) %}
+      {%- set awtrix = namespace(device=[],topic=0,entity=[]) %}
       {%- set awtrix.device = get_device(device_id) %}
       {%- for entity in entities %}
         {%- if is_state_attr(entity, "friendly_name", "Device topic") -%}
