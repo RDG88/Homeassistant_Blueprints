@@ -1,6 +1,6 @@
 blueprint:
-  name: "Multi awtrix2"
-  description: "Multi awtrix2"
+  name: "Multi awtrix"
+  description: "Multi awtrix"
   domain: automation
   input:
     awtrix:
@@ -22,17 +22,17 @@ variables:
   message: !input message
   device_ids: !input awtrix
   awtrix_devices: >-
-    {%- macro get_entity(device_id) %}
-      {%- set awtrix_device = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) %}
-      {%- set awtrix_entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first %}
-      {%- set awtrix_topic = states(awtrix_entity) -%}
-      {{ {'device': awtrix_device, 'topic': awtrix_topic, 'entity': awtrix_entity } }}
+    {%- macro get_awl_entities(device_id) %}
+      {%- set awl_device = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) %}
+      {%- set awl_entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first %}
+      {%- set awl_topic = states(awl_entity) -%}
+      {{ {'device': awl_device, 'topic': awl_topic, 'entity': awl_entity } }}
     {%- endmacro %}
     {% set ns = namespace(awtrix=[]) %}
-    {% for entity_id in device_ids %}
-      {%- set ns.awtrix = ns.awtrix + [get_entity(entity_id)] -%}
+    {% for device_id in device_ids %}
+      {%- set ns.awtrix = ns.awtrix + [get_awl_entities(device_id)] %}
     {%- endfor %}
-    {{ ns.awtrix | replace('"','')  }}
+    {{ ns.awtrix|replace('"','') }}
 
 trigger:
   - platform: time_pattern
@@ -53,7 +53,7 @@ action:
                   data:
                     qos: 0
                     retain: false
-                    topic: "{{ repeat.item.topic }}/multi"
+                    topic: "{{ repeat.item.topic }}/multitest"
                     payload: >
                       {
                         "repeat.item": "{{ repeat.item }}",
