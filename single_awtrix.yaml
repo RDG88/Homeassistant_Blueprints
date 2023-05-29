@@ -21,7 +21,7 @@ variables:
   message: !input message
   device_id: !input awtrix
   device_topic: >-
-    {{ device_entities(device_id) | select('search', 'device_topic') | first }}
+     {{ expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='state') | first }}
 
 trigger:
   - platform: time_pattern
