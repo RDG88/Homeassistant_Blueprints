@@ -1,6 +1,6 @@
 blueprint:
-  name: "Multi awtrix"
-  description: "Multi awtrix"
+  name: "Multi awtrix2"
+  description: "Multi awtrix2"
   domain: automation
   input:
     awtrix:
@@ -30,8 +30,7 @@ variables:
     {%- endmacro %}
     {% set ns = namespace(awtrix=[]) %}
     {% for entity_id in device_ids %}
-      {%- set awtrix=get_entity(entity_id) %}
-    {%- set ns.awtrix = ns.awtrix + [awtrix] %}
+      {%- set ns.awtrix = ns.awtrix + [get_entity(entity_id)] -%}
     {%- endfor %}
     {{ ns.awtrix | replace('"','')  }}
 
