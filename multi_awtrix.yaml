@@ -1,6 +1,6 @@
 blueprint:
-  name: "Multi awtrix2"
-  description: "Multi awtrix2"
+  name: "Multi awtrix"
+  description: "Multi awtrix"
   domain: automation
   input:
     awtrix:
