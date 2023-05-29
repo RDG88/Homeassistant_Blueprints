@@ -1,6 +1,6 @@
 blueprint:
-  name: "Multi awtrix"
-  description: "Multi awtrix"
+  name: "Multi awtrix2"
+  description: "Multi awtrix2"
   domain: automation
   input:
     awtrix:
@@ -22,31 +22,18 @@ variables:
   message: !input message
   device_ids: !input awtrix
   awtrix_devices: >-
-    {%- macro get_device(device_id) %}
-      {{iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name'))}}
-    {% endmacro -%}
     {%- macro get_entity(device_id) %}
-      {%- set entities = device_entities(device_id) %}
-      {%- set awtrix = namespace(device=[],topic=0,entity=[]) %}
-      {%- set awtrix.device = get_device(device_id) %}
-      {%- for entity in entities %}
-        {%- if is_state_attr(entity, "friendly_name", "Device topic") -%}
-          {%- set awtrix.topic = states(entity) %}
-          {%- set awtrix.entity = entity %}
-        {%- endif %}
-      {%- endfor %}
-      {%- if awtrix.topic == 0 %}
-        {%- set awtrix.topic = get_device(device_id) %}
-      {%- endif %}
-      {{ awtrix }}
-    {% endmacro -%}
-    {%- set ns = namespace(awtrix=[]) %}
-    {%- for entity_id in device_ids %}
-    {%- set awtrix=get_entity(entity_id)|replace(' ','')|replace('\n','')|replace('<Namespace','')|replace('>','')|replace('\\n','') %}
-    {% set ns.awtrix = ns.awtrix + [awtrix] %}
+      {%- set awtrix_device = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) %}
+      {%- set awtrix_entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first %}
+      {%- set awtrix_topic = states(awtrix_entity) -%}
+      {{ {'device': awtrix_device, 'topic': awtrix_topic, 'entity': awtrix_entity } }}
+    {%- endmacro %}
+    {% set ns = namespace(awtrix=[]) %}
+    {% for entity_id in device_ids %}
+      {%- set awtrix=get_entity(entity_id) %}
+    {%- set ns.awtrix = ns.awtrix + [awtrix] %}
     {%- endfor %}
-    {% set ns.awtrix = ns.awtrix|replace('"','') %}
-    {{ ns.awtrix }}
+    {{ ns.awtrix | replace('"','')  }}
 
 trigger:
   - platform: time_pattern
@@ -61,16 +48,19 @@ action:
             - conditions:
                 - condition: template
                   value_template: >
-                     {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+                    {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
               sequence:
                 - service: mqtt.publish
                   data:
                     qos: 0
                     retain: false
-                    topic: "{{ repeat.item.topic ~ '/dev9' }}"
+                    topic: "{{ repeat.item.topic }}/multi"
                     payload: >
                       {
-                        "text": "{{ repeat.item }}"
+                        "repeat.item": "{{ repeat.item }}",
+                        "repeat.item.device": "{{ repeat.item.device }}",
+                        "repeat.item.topic": "{{ repeat.item.topic }},
+                        "repeat.item.entity": "{{ repeat.item.entity }},
                       }
 
 mode: single
