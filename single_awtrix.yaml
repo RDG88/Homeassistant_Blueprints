@@ -20,7 +20,7 @@ blueprint:
 variables:
   message: !input message
   device_id: !input awtrix
-  awtrix_topic: >-
+  device_topic: >-
     {{ device_entities(device_id) | select('search', 'device_topic') | first }}
 
 trigger:
@@ -31,10 +31,10 @@ condition: []
 action:
   - service: mqtt.publish
     data:
-      topic: "{{ awtrix_topic ~ '/dev17'}}"
+      topic: "{{ device_topic ~ '/dev17'}}"
       payload: |-
         {   
-          "text": "{{ awtrix_topic }}"
+          "text": "{{ device_topic }}"
         }
 
 mode: single
