@@ -22,17 +22,19 @@ variables:
   message: !input message
   device_ids: !input awtrix
   awtrix_devices: >-
-    {%- macro get_awl_entities(device_id) %}
-      {%- set awl_device = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) %}
-      {%- set awl_entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first %}
-      {%- set awl_topic = states(awl_entity) -%}
-      {{ {'device': awl_device, 'topic': awl_topic, 'entity': awl_entity } }}
+    {%- macro get_awl_entities(device_id) -%}
+      {%- set awl = {
+        "device": iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')),
+        "entity": expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first,
+        "topic": expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='state') | first 
+      } -%}
+      {{ awl }}
     {%- endmacro %}
     {% set ns = namespace(awtrix=[]) %}
     {% for device_id in device_ids %}
       {%- set ns.awtrix = ns.awtrix + [get_awl_entities(device_id)] %}
-    {%- endfor %}
-    {{ ns.awtrix|replace('"','') }}
+    {%- endfor %}    
+    [{{ ns.awtrix|join(", ") }}]
 
 trigger:
   - platform: time_pattern
