@@ -1,6 +1,22 @@
 blueprint:
   name: "AWTRIX Clock face"
-  description: "AWTRIX Clock face"
+  description: >
+    ## Custom Clockface for AWTRIX Light
+
+    This blueprint provides a custom clockface for the AWTRIX Light. It allows you to personalize various aspects of the clockface to suit your preferences.
+
+    ### Features
+  
+    - Change the color of the top and bottom parts of the calendar display.  
+
+    - Customize the color of the time text.  
+
+    - Adjust the positioning and color of the weekday bar.  
+  
+    ### Prerequisites
+  
+    Before using this blueprint, ensure that you have the Home Assistant time_date Sensor integrated with the display_option time. If you haven't already set it up, you can find instructions for the integration [here](https://www.home-assistant.io/integrations/time_date/).
+
   domain: automation
   input:
     awtrix:
@@ -20,7 +36,7 @@ blueprint:
       default: clock_face
     time_sensor:
       name: Time sensor
-      description: Time sensor
+      description: Select the time sensor from the time_date integration
       selector:
         entity:
           multiple: false
@@ -37,50 +53,50 @@ blueprint:
     weekday_marker_bar_position:
       name: Where should the weekday bar be positioned?
       description: >
-        Where should the weekday bar be positioned?
+        Select the position of the weekday bar.
       selector:
         select:
           options:
             - label: Don't show the weekday bar
               value: never
-            - label: Show the weekday on top of the time
+            - label: Show the weekday above the time
               value: top
-            - label: Show the weekday on bottom of the time
+            - label: Show the weekday below the time
               value: bottom
       default: "bottom"
     color_marker_current:
-      name: Text Color for the current weekday marker
-      description: Select the Text color
+      name: Color for the current weekday marker
+      description: Select the color
       selector:
         color_rgb:
       default: [255, 255, 255]
     color_weekday_marker:
-      name: Text Color for the weekday marker
-      description: Select the Text color
+      name: Color for the weekday marker
+      description: Select the color
       selector:
         color_rgb:
       default: [69, 69, 69]
     color_weekday_number:
-      name: Text Color for the weekday number
-      description: Select the Text color
+      name: Color for the weekday number
+      description: Select the color
       selector:
         color_rgb:
       default: [0, 0, 0]
     color_time:
-      name: Text Color for the time
-      description: Select the Text color
+      name: Color for the time
+      description: Select the color
       selector:
         color_rgb:
       default: [255, 255, 255]
     color_top_calendar:
-      name: Text Color for the top part of the calendar
-      description: Select the Text color
+      name: Color for the top part of the calendar
+      description: Select the color
       selector:
         color_rgb:
       default: [255, 0, 0]
     color_bottom_calendar:
-      name: Text Color for the top part of the calendar
-      description: Select the Text color
+      name: Color for the top part of the calendar
+      description: Select the color
       selector:
         color_rgb:
       default: [255, 255, 255]
@@ -112,13 +128,17 @@ variables:
     {% set day = now().day %}
     {% set gen_weekday_start = 10 + (weekday | int - 1) * 3 %}
     {% set gen_weekday_end = 11 + (weekday | int - 1) * 3 %}
-    {% set marker_bar_pos = 0 %}
-    {% set clock_pos = 1 %}
-    {% if marker_bar_position == "top" %}
-      {% set clock_pos = 2 %}
+    {% if marker_bar_position == "never" %}
+        {% set marker_bar_pos = 0 %}
+        {% set clock_pos = 2 %}
+    {% elif marker_bar_position == "top" %}
+        {% set marker_bar_pos = 0 %}
+        {% set clock_pos = 2 %}
     {% elif marker_bar_position == "bottom" %}
-      {% set marker_bar_pos = 7 %}
+        {% set marker_bar_pos = 7 %}
+        {% set clock_pos = 1 %}
     {% endif %}
+
     {
       "draw": [
         {% if marker_bar_position != "never" %}
