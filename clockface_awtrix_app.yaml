@@ -144,6 +144,11 @@ variables:
         {% set marker_bar_pos = 7 %}
         {% set clock_pos = 1 %}
     {% endif %}
+    {% if day|int < 10 %}
+        {% set text_pos = 3 %}
+    {% else %}
+        {% set text_pos = 1 %}
+    {% endif %}
 
     {
       "draw": [
@@ -155,7 +160,7 @@ variables:
         {% endif %}
         {"df": [0, 2, 9, 7, {{ bottom_calendar_color }}]},
         {"df": [0, 0, 9, 2, {{ top_calendar_color }}]},
-        {"dt": [1, 2, {{ day }}, {{ weekday_color }}]},
+        {"dt": [{{ text_pos }}, 2, {{ day }}, {{ weekday_color }}]},
         {"dt": [11, {{ clock_pos }}, "{{ time }}", {{ time_color }}]}
       ],
       "duration": {{ duration }},
