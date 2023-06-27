@@ -95,7 +95,7 @@ blueprint:
         color_rgb:
       default: [255, 0, 0]
     color_bottom_calendar:
-      name: Color for the top part of the calendar
+      name: Color for the bottom part of the calendar
       description: Select the color
       selector:
         color_rgb:
