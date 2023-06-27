@@ -12,11 +12,17 @@ blueprint:
     - Customize the color of the time text.  
 
     - Adjust the positioning and color of the weekday bar.  
+
+    - It is not necessary to upload icons for the days because the draw function is used, so the icons are generated dynamically.
   
     ### Prerequisites
   
     Before using this blueprint, ensure that you have the Home Assistant time_date Sensor integrated with the display_option time. If you haven't already set it up, you can find instructions for the integration [here](https://www.home-assistant.io/integrations/time_date/).
-
+  
+    ### Credits
+  
+    All credits for this blueprint goes to @Hans at the AWTRIX discord, he created a nodered flow for this, i just simply converted it to a homeassistant blueprint.
+  
   domain: automation
   input:
     awtrix:
