@@ -1,0 +1,215 @@
+blueprint:
+  name: "AWTRIX Clock face"
+  description: >
+    ## Custom Clockface for AWTRIX Light
+
+    This blueprint provides a custom clockface for the AWTRIX Light. It allows you to personalize various aspects of the clockface to suit your preferences.
+
+    ### Features
+
+    - Change the color of the top and bottom parts of the calendar display.  
+
+    - Customize the color of the time text.  
+
+    - Adjust the positioning and color of the weekday bar.  
+
+    - It is not necessary to upload icons for the days because the draw function is used, so the icons are generated dynamically.
+
+    ### Prerequisites
+
+    Before using this blueprint, ensure that you have the Home Assistant time_date Sensor integrated with the display_option time. If you haven't already set it up, you can find instructions for the integration [here](https://www.home-assistant.io/integrations/time_date/).
+
+    ### Credits
+
+    All credits for this blueprint goes to @Hans at the AWTRIX discord, he created a nodered flow for this, i just simply converted it to a homeassistant blueprint.
+
+  domain: automation
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          integration: mqtt
+          manufacturer: Blueforcer
+          model: AWTRIX Light
+          multiple: true
+    awtrix_app_name:
+      name: AWTRIX Application name
+      description: This is the custom app name that will be added to AWTRIX, should be unique
+      selector:
+        text: {}
+      default: clock_face
+    time_sensor:
+      name: Time sensor
+      description: Select the time sensor from the time_date integration
+      selector:
+        entity:
+          multiple: false
+          filter:
+            - integration: time_date
+    duration:
+      name: Duration (in seconds)
+      description: Sets how long the app or notification should be displayed.
+      default: "10"
+    lifetime:
+      name: Lifetime of the app (in seconds)
+      description: Removes the custom app when there is no update after the given time in seconds. Keep this value higher than 59 seconds to get the AWTRIX app automatically deleted when disabling the automation.
+      default: "70"
+    weekday_marker_bar_position:
+      name: Where should the weekday bar be positioned?
+      description: >
+        Select the position of the weekday bar.
+      selector:
+        select:
+          options:
+            - label: Don't show the weekday bar
+              value: never
+            - label: Show the weekday above the time
+              value: top
+            - label: Show the weekday below the time
+              value: bottom
+      default: "bottom"
+    calendar_type:
+      name: Select the calendar type
+      description: >
+        Select the calendar type
+      selector:
+        select:
+          options:
+            - label: Calendar type 1
+              value: type1
+            - label: Calendar type 2
+              value: type2
+      default: "type1"
+    color_marker_current:
+      name: Color for the current weekday marker
+      description: Select the color
+      selector:
+        color_rgb:
+      default: [255, 255, 255]
+    color_marker_sunday:
+      name: Color for when the current day is sunday marker
+      description: Select the color
+      selector:
+        color_rgb:
+      default: [255, 255, 255]
+    color_weekday_marker:
+      name: Color for the weekday marker
+      description: Select the color
+      selector:
+        color_rgb:
+      default: [69, 69, 69]
+    color_weekday_number:
+      name: Color for the weekday number
+      description: Select the color
+      selector:
+        color_rgb:
+      default: [0, 0, 0]
+    color_time:
+      name: Color for the time
+      description: Select the color
+      selector:
+        color_rgb:
+      default: [255, 255, 255]
+    color_top_calendar:
+      name: Color for the top part of the calendar
+      description: Select the color. This color selector only works for Calendar type 1
+      selector:
+        color_rgb:
+      default: [255, 0, 0]
+    color_bottom_calendar:
+      name: Color for the bottom part of the calendar
+      description: Select the color This color selector only works for Calendar type 1 and Calendar type 2
+      selector:
+        color_rgb:
+      default: [255, 255, 255]
+
+variables:
+  device_ids: !input awtrix
+  app: !input awtrix_app_name
+  marker_color: !input color_weekday_marker
+  weekday_color: !input color_weekday_number
+  marker_color_current: !input color_marker_current
+  marker_color_sunday: !input color_marker_sunday
+  time_color: !input color_time
+  top_calendar_color: !input color_top_calendar
+  bottom_calendar_color: !input color_bottom_calendar
+  marker_bar_position: !input weekday_marker_bar_position
+  sensor_time: !input time_sensor
+  calendar_type: !input calendar_type
+  duration: !input duration
+  lifetime: !input lifetime
+  awtrix_devices: >-
+    {%- set ns = namespace(awtrix = []) -%}
+    {%- for device_id in device_ids -%}
+      {%- set device_name = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) -%}
+      {%- set entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first -%}
+      {%- set topic = states(entity) -%}
+      {% set ns.awtrix = ns.awtrix + [{"device": device_name, "entity": entity, "topic": topic}] -%}
+    {%- endfor -%}
+    {{ ns.awtrix }}
+  payload: >-
+    {% set weekday = now().strftime("%w") %}
+    {% set time = states(sensor_time) %}
+    {% set day = now().day %}
+    {% set gen_weekday_start = 10 + (weekday | int - 1) * 3 %}
+    {% set gen_weekday_end = 11 + (weekday | int - 1) * 3 %}
+    {% set marker_bar_pos, clock_pos = 0, 2 %}
+    {% if marker_bar_position == "bottom" %}
+    {% set marker_bar_pos, clock_pos = 7, 1 %}
+    {% endif %}
+    {% set text_pos = 3 if day|int < 10 else 1 %}
+    {
+      "draw": [
+      {% if marker_bar_position != "never" %}
+        {% for marker in range(10, 30, 3) %}
+          {"dl": [{{ marker }}, {{ marker_bar_pos }}, {{ marker + 1 }}, {{ marker_bar_pos }}, {{ marker_color }}]},
+        {% endfor %}
+        {% if weekday == 7 %}
+          {"dl": [{{ gen_weekday_start }}, {{ marker_bar_pos }}, {{ gen_weekday_end }}, {{ marker_bar_pos }}, {{ marker_color_sunday }}]},
+        {% else %}
+          {"dl": [{{ gen_weekday_start }}, {{ marker_bar_pos }}, {{ gen_weekday_end }}, {{ marker_bar_pos }}, {{ marker_color_current }}]},
+        {% endif %}
+      {% endif %}
+      {% if calendar_type == "type1" %}
+        {"df": [0, 2, 9, 7, {{ bottom_calendar_color }}]},
+        {"df": [0, 0, 9, 2, {{ top_calendar_color }}]},
+      {% elif calendar_type == "type2" %}
+        {"df": [0, 0, 9, 8, {{ bottom_calendar_color }}]},
+        {"dl": [1, 0, 2, 0, [0, 0, 0]]},
+        {"dl": [6, 0, 7, 0, [0, 0, 0]]},
+      {% endif %}
+        {"dt": [{{ text_pos }}, 2, {{ day }}, {{ weekday_color }}]},
+        {"dt": [11, {{ clock_pos }}, "{{ time }}", {{ time_color }}]}
+      ],
+        "duration": {{ duration }},
+        "lifetime": {{ lifetime }}
+      }
+trigger:
+  - platform: state
+    entity_id:
+      - !input time_sensor
+condition: []
+
+action:
+  - repeat:
+      for_each: "{{ awtrix_devices }}"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: >
+                    {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+                - condition: template
+                  value_template: >
+                    {{ states(sensor_time) not in ['unavailable', 'unknown'] }}
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item.topic ~ '/custom/' ~ app }}"
+                    payload: "{{ payload }}"
+
+mode: single
