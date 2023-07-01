@@ -191,8 +191,9 @@ variables:
       "lifetime": {{ lifetime }}
     }
 trigger:
-  - platform: time_pattern
-    minutes: /1
+  - platform: state
+    entity_id:
+      - !input time_sensor
 condition: []
 
 action:
@@ -204,12 +205,15 @@ action:
                 - condition: template
                   value_template: >
                     {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+                - condition: template
+                  value_template: >
+                    {{ states(sensor_time) not in ['unavailable', 'unknown'] }}
               sequence:
                 - service: mqtt.publish
                   data:
                     qos: 0
                     retain: false
-                    topic: "{{ repeat.item.topic }}/notify"
+                    topic: "{{ repeat.item.topic ~ '/custom/' ~ app }}"
                     payload: "{{ payload }}"
 
 mode: single
