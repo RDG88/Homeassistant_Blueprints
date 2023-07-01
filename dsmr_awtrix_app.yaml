@@ -1,0 +1,128 @@
+blueprint:
+  name: "Multi DSMR Reading"
+  description: "This blueprint will show the status of sensor of the DSMR intergration"
+  domain: automation
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          integration: mqtt
+          manufacturer: Blueforcer
+          model: AWTRIX Light
+          multiple: true
+    awtrix_app_name:
+      name: AWTRIX Application name
+      description: This is the custom app name that will be added to AWTRIX, should be unique
+      selector:
+        text: {}
+      default: dsmr
+    dsmr_sensor:
+      name: DSMR sensor
+      description: DSMR sensor
+      selector:
+        entity:
+          multiple: false
+          filter:
+            - integration: dsmr_reader
+    dsmr_icon:
+      name: Icon
+      description: Enter the Icon Name or ID of the icon that you like to show.
+      selector:
+        text:
+      default: "44432"
+    push_icon:
+      name: pushIcon
+      description:
+        "Please select the pushIcon setting for the icon\n\n  - `0`  Icon
+        doesn't move\n\n  - `1`  Icon moves with text and will not appear again\n\n
+        \ - `2` Icon moves with text but appears again when the text starts to scroll
+        again\n"
+      selector:
+        select:
+          options:
+            - label: "Icon doesn't move."
+              value: "0"
+            - label: "Icon moves with text and will not reappear."
+              value: "1"
+            - label: "Icon moves with text but appears again when the text starts."
+              value: "2"
+          mode: list
+      default: "0"
+    txt_color_dsmr:
+      name: Text Color for DSMR Sensor
+      description: Select the Text color
+      selector:
+        color_rgb:
+      default: [255, 255, 255]
+    duration:
+      name: Duration (in seconds)
+      description: Sets how long the app or notification should be displayed.
+      default: "10"
+    repeat:
+      name: Repeat
+      description: Sets how many times the text should be scrolled through the matrix before the app/notification ends.
+      default: "4"
+    lifetime:
+      name: Lifetime of the app (in seconds)
+      description: Removes the custom app when there is no update after the given time in seconds. Keep this value higher than 59 seconds to get the AWTRIX app automatically deleted when disabling the automation.
+      default: "70"
+
+variables:
+  device_ids: !input awtrix
+  app: !input awtrix_app_name
+  icon: !input dsmr_icon
+  txt_color_dsmr: !input txt_color_dsmr
+  sensor_dsmr: !input dsmr_sensor
+  push_icon: !input push_icon
+  duration: !input duration
+  repeat: !input repeat
+  lifetime: !input lifetime
+  awtrix_devices: >-
+    {%- macro get_awl_entities(device_id) %}
+      {%- set awl_device = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) %}
+      {%- set awl_entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first %}
+      {%- set awl_topic = states(awl_entity) -%}
+      {{ {'device': awl_device, 'topic': awl_topic, 'entity': awl_entity } }}
+    {%- endmacro %}
+    {% set ns = namespace(awtrix=[]) %}
+    {% for device_id in device_ids %}
+      {%- set ns.awtrix = ns.awtrix + [get_awl_entities(device_id)] %}
+    {%- endfor %}
+    {{ ns.awtrix|replace('"','') }}
+trigger:
+  - platform: state
+    entity_id:
+      - !input dsmr_sensor
+  - platform: time_pattern
+    seconds: /59
+action:
+  - repeat:
+      for_each: "{{ awtrix_devices }}"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: >
+                    {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+                - condition: template
+                  value_template: >
+                    {{ states(sensor_dsmr) not in ['unavailable', 'unknown'] }}
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item.topic ~ '/custom/' ~ app }}"
+                    payload: |
+                      {   
+                        "text": "{{ states(sensor_dsmr,rounded=True,with_unit=True) }}",
+                        "color": {{ txt_color_dsmr }},
+                        "icon": "{{ icon }}",
+                        "pushIcon": {{ push_icon }},
+                        "duration": {{ duration }},
+                        "lifetime": {{ lifetime }}
+                      }
+
+mode: restart
