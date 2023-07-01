@@ -154,6 +154,16 @@ variables:
     {%- endfor -%}
     {{ ns.awtrix }}
   payload: >-
+    {% set weekday = now().strftime("%w") %}
+    {% set time = states(sensor_time) %}
+    {% set day = now().day %}
+    {% set gen_weekday_start = 10 + (weekday | int - 1) * 3 %}
+    {% set gen_weekday_end = 11 + (weekday | int - 1) * 3 %}
+    {% set marker_bar_pos, clock_pos = 0, 2 %}
+    {% if marker_bar_position == "bottom" %}
+      {% set marker_bar_pos, clock_pos = 7, 1 %}
+    {% endif %}
+    {% set text_pos = 3 if day|int < 10 else 1 %}
     {% macro draw_marker_bar(marker_bar_pos, marker_color) %}
       {% for marker in range(10, 30, 3) %}
         {"dl": [{{ marker }}, {{ marker_bar_pos }}, {{ marker + 1 }}, {{ marker_bar_pos }}, {{ marker_color }}]},
