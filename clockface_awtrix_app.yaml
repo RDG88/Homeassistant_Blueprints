@@ -4,7 +4,11 @@ blueprint:
     ## Custom Clockface for AWTRIX Light
 
     This blueprint provides a custom clockface for the AWTRIX Light. It allows you to personalize various aspects of the clockface to suit your preferences.
+    
+    ### Screenshot
 
+      ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_clockface.png)
+      
     ### Features
 
     - Change the color of the top and bottom parts of the calendar display.  
