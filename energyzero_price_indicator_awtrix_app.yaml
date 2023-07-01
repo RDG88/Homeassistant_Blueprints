@@ -1,0 +1,261 @@
+blueprint:
+  name: "AWTRIX EnergyZero Blueprint"
+  description: >
+    ## AWTRIX EnergyZero Blueprint
+
+    The EnergyZero Integration Blueprint is a powerful tool designed to optimize your energy consumption based on dynamic energy contracts. With this blueprint, you can effectively monitor and manage your energy usage, taking advantage of the most cost-efficient time slots and maximizing your savings. 
+        This blueprint will utilize the AWTRIX indicator functions
+    ### Key Features
+    - **EnergySensor**: The blueprint utilizes the "energyzero_today_energy_percentage_of_max" sensor, which accurately indicates the percentage of the current energy price relative to its maximum value.
+
+    ### Thresholds and Indicators
+
+    The blueprint incorporates four thresholds, each associated with a specific range of sensor values. Depending on the sensor reading, the corresponding indicator on your Awtrix device will illuminate with a specific color and behavior.
+
+    1. **Threshold 1: Free Energy** - Sensor Range: -100 to -1
+          - When the sensor reading falls within this range, you are enjoying free energy. The indicator on your Awtrix device will blink in vibrant green, symbolizing that you will get money back when using energy.
+
+    2. **Threshold 2: Cheapest Energy** - Sensor Range: 0 to 39
+          - This range represents the most affordable time to utilize energy. By optimizing your energy consumption during this period, you can further reduce your utility costs. The indicator on your Awtrix device will illuminate steadily, indicating the optimal usage window.
+
+    3. **Threshold 3: Moderate Pricing** - Sensor Range: 39 to 69
+          - Within this range, the sensor readings indicate a balance between cheaper and more expensive energy prices. The indicator on your Awtrix device will shine in a calming yellow color, providing a visual cue without any blinking.
+
+    4. **Threshold 4: Most Expensive Energy** - Sensor Range: 70 to 100
+          - When the sensor reading reaches this range, it signifies the peak pricing period. Using energy during this time will be the most costly. The indicator on your Awtrix device will glow in a warning red, reminding you to conserve energy or minimize usage during this period.
+
+    ### Customization Options
+
+    The EnergyZero Integration Blueprint offers extensive customization capabilities to suit your preferences and requirements:
+
+    1. **Adjustable Threshold Values**: You have the flexibility to set the low and high values for each threshold. 
+
+    2. **Configurable Indicators**: The blueprint supports the use of multiple Awtrix devices, and configure which indicator should be used: 
+    - Indicator1 - Top Right
+    - Indicator2 - Middle Right
+    - Indicator3 - Down Right
+
+    3. **Color and Blinking Configuration**: You can easily customize the color scheme for each indicator, tailoring it to your personal preference. Additionally, the blinking behavior of the indicators can be adjusted to match your desired visual effect.
+  domain: automation
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          integration: mqtt
+          manufacturer: Blueforcer
+          model: AWTRIX Light
+          multiple: true
+    energy_zero_sensor:
+      name: Energy Zero Sensor
+      description: energyzero_today_energy_percentage_of_max
+      selector:
+        entity:
+          multiple: false
+          filter:
+            - integration: energyzero
+    indicator:
+      name: Indicator
+      description: Select the indicator you want to use
+      selector:
+        select:
+          options:
+            - indicator1
+            - indicator2
+            - indicator3
+    threshold_1_low:
+      name: Threshold 1 - Low
+      description: Select the low threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: -100
+    threshold_1_high:
+      name: Threshold 1 - High
+      description: Select the high threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: -1
+    threshold_1_color:
+      name: Threshold 1 - Indicator Color
+      description: Select the Indicator Color
+      selector:
+        color_rgb:
+      default: [0,255,0]
+    threshold_1_blink:
+      name: Threshold 1 - Blinking enabled for indicator
+      description: Select the blink speed in milliseconds. (0 = no blinking)
+      selector:
+        number:
+          min: 0
+          max: 5000
+      default: 1000
+    threshold_2_low:
+      name: Threshold 2 - Low
+      description: Select the low threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: 0
+    threshold_2_high:
+      name: Threshold 2 - High
+      description: Select the high threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: 39
+    threshold_2_color:
+      name: Threshold 2 - Indicator Color
+      description: Select the Indicator Color
+      selector:
+        color_rgb:
+      default: [0,255,0]
+    threshold_2_blink:
+      name: Threshold 2 - Blinking enabled for indicator
+      description: Select the blink speed in milliseconds. (0 = no blinking)
+      selector:
+        number:
+          min: 0
+          max: 5000
+      default: 0
+    threshold_3_low:
+      name: Threshold 3 - Low
+      description: Select the low threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: 40
+    threshold_3_high:
+      name: Threshold 3 - High
+      description: Select the high threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: 69
+    threshold_3_color:
+      name: Threshold 3 - Indicator Color
+      description: Select the Indicator Color
+      selector:
+        color_rgb:
+      default: [255,255,0]
+    threshold_3_blink:
+      name: Threshold 3 - Blinking enabled for indicator
+      description: Select the blink speed in milliseconds. (0 = no blinking)
+      selector:
+        number:
+          min: 0
+          max: 5000
+      default: 0
+    threshold_4_low:
+      name: Threshold 4 - Low
+      description: Select the low threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: 70
+    threshold_4_high:
+      name: Threshold 4 - High
+      description: Select the high threshold
+      selector:
+        number:
+          min: -100
+          max: 100
+          unit_of_measurement: "%"    
+      default: 100
+    threshold_4_color:
+      name: Threshold 4 - Indicator Color
+      description: Select the Indicator Color
+      selector:
+        color_rgb:
+      default: [255,0,0]
+    threshold_4_blink:
+      name: Threshold 4 - Blinking enabled for indicator
+      description: Select the blink speed in milliseconds. (0 = no blinking)
+      selector:
+        number:
+          min: 0
+          max: 5000
+      default: 0
+variables:
+  device_ids: !input awtrix
+  sensor: !input energy_zero_sensor
+  indicator: !input indicator
+  threshold_1_low: !input threshold_1_low
+  threshold_1_high: !input threshold_1_high
+  threshold_1_color: !input threshold_1_color
+  threshold_1_blink: !input threshold_1_blink
+  threshold_2_low: !input threshold_2_low
+  threshold_2_high: !input threshold_2_high
+  threshold_2_color: !input threshold_2_color
+  threshold_2_blink: !input threshold_2_blink
+  threshold_3_low: !input threshold_3_low
+  threshold_3_high: !input threshold_3_high
+  threshold_3_color: !input threshold_3_color
+  threshold_3_blink: !input threshold_3_blink
+  threshold_4_low: !input threshold_4_low
+  threshold_4_high: !input threshold_4_high
+  threshold_4_color: !input threshold_4_color
+  threshold_4_blink: !input threshold_4_blink
+  awtrix_devices: >-
+    {%- set ns = namespace(awtrix = []) -%}
+    {%- for device_id in device_ids -%}
+      {%- set device_name = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) -%}
+      {%- set entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first -%}
+      {%- set topic = states(entity) -%}
+      {% set ns.awtrix = ns.awtrix + [{"device": device_name, "entity": entity, "topic": topic}] -%}
+    {%- endfor -%}
+    {{ ns.awtrix }}
+  payload: >-
+    {% set sensor_value = states('sensor.energyzero_today_energy_percentage_of_max') | int %} 
+    {% set conditions = [
+      {'threshold_low': threshold_1_low, 'threshold_high': threshold_1_high, 'topic': indicator, 'color': threshold_1_color, 'blink': threshold_1_blink},
+      {'threshold_low': threshold_2_low, 'threshold_high': threshold_2_high, 'topic': indicator, 'color': threshold_2_color, 'blink': threshold_2_blink},
+      {'threshold_low': threshold_3_low, 'threshold_high': threshold_3_high, 'topic': indicator, 'color': threshold_3_color, 'blink': threshold_3_blink},
+      {'threshold_low': threshold_4_low, 'threshold_high': threshold_4_high, 'topic': indicator, 'color': threshold_4_color, 'blink': threshold_4_blink},
+    ] %}
+    {% for condition in conditions %}
+      {% if condition.threshold_low <= sensor_value <= condition.threshold_high %}
+        {% set topic = condition.topic %}
+        {% set payload = {"color": condition.color, "blink": condition.blink} %}
+        {{ payload }}
+      {% endif %}
+    {% endfor %}
+trigger:
+  - platform: time_pattern
+    minutes: /1
+condition: []
+
+action:
+  - repeat:
+      for_each: "{{ awtrix_devices }}"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: >
+                    {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item.topic }}/{{ indicator }}"
+                    payload: "{{ payload }}"
+
+mode: single
