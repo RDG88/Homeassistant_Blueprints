@@ -59,15 +59,25 @@ blueprint:
     weekday_marker_bar_position:
       name: Where should the weekday bar be positioned?
       description: >
-        Select the position of the weekday bar.
+        Select the position of the weekday bar.  
+
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_off_tn.png) `Don't show the weekday bar`
+        
+          ---
+        
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_above_tn.png) `Show the weekday bar above the time`
+
+          ---
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_below_tn.png) `Show the weekday bar below the time`
+
       selector:
         select:
           options:
             - label: Don't show the weekday bar
               value: never
-            - label: Show the weekday above the time
+            - label: Show the weekday bar above the time
               value: top
-            - label: Show the weekday below the time
+            - label: Show the weekday bar below the time
               value: bottom
       default: "bottom"
     calendar_style:
@@ -75,9 +85,11 @@ blueprint:
       description: >
         Select the calendar style
 
-        - ![](https://developer.lametric.com/content/apps/icon_thumbs/11543_icon_thumb.png?v=1) - `Style 1`
+          ![](https://developer.lametric.com/content/apps/icon_thumbs/11543_icon_thumb.png?v=1) `Calendar Style 1`
 
-        - ![](https://developer.lametric.com/content/apps/icon_thumbs/9916_icon_thumb.png?v=1) - `Style 2`
+          ---
+
+          ![](https://developer.lametric.com/content/apps/icon_thumbs/9916_icon_thumb.png?v=1) `Calendar Style 2`
       selector:
         select:
           options:
@@ -157,8 +169,6 @@ variables:
     {% set weekday = now().strftime("%w") %}
     {% set time = states(sensor_time) %}
     {% set day = now().day %}
-    {% set gen_weekday_start = 10 + (weekday | int - 1) * 3 %}
-    {% set gen_weekday_end = 11 + (weekday | int - 1) * 3 %}
     {% set marker_bar_pos, clock_pos = 0, 2 %}
     {% if marker_bar_position == "bottom" %}
       {% set marker_bar_pos, clock_pos = 7, 1 %}
