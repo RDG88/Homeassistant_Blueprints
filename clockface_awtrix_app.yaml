@@ -29,7 +29,8 @@ blueprint:
 
     ### Credits
 
-    All credits for this blueprint goes to @Hans at the AWTRIX discord, he created a nodered flow for this, i just simply converted it to a homeassistant blueprint.
+    @Hans from the AWTRIX discord deserves credit for this blueprint. He originally designed a nodered flow that incorporates the drawing functions to create this custom clock face.
+
 
   domain: automation
   input:
