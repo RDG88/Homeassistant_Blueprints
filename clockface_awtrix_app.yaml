@@ -31,7 +31,6 @@ blueprint:
 
     @Hans from the AWTRIX discord deserves credit for this blueprint. He originally designed a nodered flow that incorporates the drawing functions to create this custom clock face.
 
-
   domain: automation
   input:
     awtrix:
@@ -196,21 +195,22 @@ variables:
   payload: >-
     {% set weekday = now().isoweekday() %}
     {% if week_start == "sunday" %}
-      {% set weekday = (now().isoweekday() % 7) + 1 %}
+      {% set weekday = (weekday % 7) + 1 %}
     {% endif %}
-
     {% set time = states(sensor_time) %}
     {% set day = now().day %}
     {% set marker_bar_pos, clock_pos = 0, 2 %}
     {% if marker_bar_position == "bottom" %}
       {% set marker_bar_pos, clock_pos = 7, 1 %}
     {% endif %}
-    {% set text_pos = 3 if day|int < 10 else 1 %}
+    {% set text_pos = 3 if day < 10 else 1 %}
+
     {% macro draw_marker_bar(marker_bar_pos, marker_color) %}
       {% for marker in range(10, 30, 3) %}
         {"dl": [{{ marker }}, {{ marker_bar_pos }}, {{ marker + 1 }}, {{ marker_bar_pos }}, {{ marker_color }}]},
       {% endfor %}
     {% endmacro %}
+
     {% macro draw_weekday_marker(marker_bar_pos, marker_color_current, marker_color_sunday, weekday) %}
       {% set gen_weekday_start = 10 + (weekday | int - 1) * 3 %}
       {% set gen_weekday_end = gen_weekday_start + 1 %}
@@ -220,15 +220,18 @@ variables:
         {"dl": [{{ gen_weekday_start }}, {{ marker_bar_pos }}, {{ gen_weekday_end }}, {{ marker_bar_pos }}, {{ marker_color_current }}]},
       {% endif %}
     {% endmacro %}
+
     {% macro draw_calendar_style1(bottom_calendar_color, top_calendar_color) %}
       {"df": [0, 2, 9, 7, {{ bottom_calendar_color }}]},
       {"df": [0, 0, 9, 2, {{ top_calendar_color }}]},
     {% endmacro %}
+    
     {% macro draw_calendar_style2(bottom_calendar_color) %}
       {"df": [0, 0, 9, 8, {{ bottom_calendar_color }}]},
       {"dl": [1, 0, 2, 0, [0, 0, 0]]},
       {"dl": [6, 0, 7, 0, [0, 0, 0]]},
     {% endmacro %}
+    
     {
       "draw": [
         {% if marker_bar_position != "never" %}
