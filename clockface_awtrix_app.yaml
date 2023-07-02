@@ -17,6 +17,8 @@ blueprint:
 
     - Customize the color of the displayed time.
 
+    - Select the day that will mark the beginning of the week. Monday or Sunday.
+
     - Make adjustments to the positioning and color of the weekday bar, with the ability to change the color specifically for Sundays.
 
     - It is not necessary to upload icons for the days because the draw function is used, so the icons are generated dynamically.
@@ -86,6 +88,18 @@ blueprint:
             - label: Show the weekday bar below the time
               value: bottom
       default: "bottom"
+    week_start:
+      name: With what day should the week begin?
+      description: >
+        Please select the day that will mark the beginning of the week. Depending on your choice, the Sunday marker will either be positioned at the start or the end.
+      selector:
+        select:
+          options:
+            - label: Monday
+              value: "monday"
+            - label: Sunday
+              value: "sunday"
+      default: "monday"
     calendar_style:
       name: Select the calendar style
       description: >
@@ -166,6 +180,7 @@ variables:
   marker_bar_position: !input weekday_marker_bar_position
   sensor_time: !input time_sensor
   calendar_style: !input calendar_style
+  week_start: !input week_start
   duration: !input duration
   lifetime: !input lifetime
   awtrix_devices: >-
@@ -178,7 +193,11 @@ variables:
     {%- endfor -%}
     {{ ns.awtrix }}
   payload: >-
-    {% set weekday = now().strftime("%w") %}
+    {% set weekday = now().isoweekday() %}
+    {% if week_start == "sunday" %}
+      {% set weekday = (now().isoweekday() % 7) + 1 %}
+    {% endif %}
+
     {% set time = states(sensor_time) %}
     {% set day = now().day %}
     {% set marker_bar_pos, clock_pos = 0, 2 %}
@@ -193,9 +212,9 @@ variables:
     {% endmacro %}
     {% macro draw_weekday_marker(marker_bar_pos, marker_color_current, marker_color_sunday, weekday) %}
       {% set gen_weekday_start = 10 + (weekday | int - 1) * 3 %}
-      {% set gen_weekday_end = 11 + (weekday | int - 1) * 3 %}
-      {% if weekday|int == 0 %}
-        {"dl": [28, {{ marker_bar_pos }}, 29, {{ marker_bar_pos }}, {{ marker_color_sunday }}]},
+      {% set gen_weekday_end = gen_weekday_start + 1 %}
+      {% if now().isoweekday() == 7 %}
+        {"dl": [{{ gen_weekday_start }}, {{ marker_bar_pos }}, {{ gen_weekday_end }}, {{ marker_bar_pos }}, {{ marker_color_sunday }}]},
       {% else %}
         {"dl": [{{ gen_weekday_start }}, {{ marker_bar_pos }}, {{ gen_weekday_end }}, {{ marker_bar_pos }}, {{ marker_color_current }}]},
       {% endif %}
