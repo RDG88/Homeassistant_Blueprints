@@ -38,9 +38,10 @@ blueprint:
       description: Select the Awtrix light
       selector:
         device:
-          integration: mqtt
-          manufacturer: Blueforcer
-          model: AWTRIX Light
+          filter:
+            - integration: mqtt
+              manufacturer: Blueforcer
+              model: AWTRIX Light
           multiple: true
     awtrix_app_name:
       name: AWTRIX Application name
@@ -53,9 +54,9 @@ blueprint:
       description: Select the time sensor from the time_date integration
       selector:
         entity:
-          multiple: false
           filter:
             - integration: time_date
+          multiple: false
     duration:
       name: Duration (in seconds)
       description: Sets how long the app should be displayed.
@@ -225,13 +226,13 @@ variables:
       {"df": [0, 2, 9, 7, {{ bottom_calendar_color }}]},
       {"df": [0, 0, 9, 2, {{ top_calendar_color }}]},
     {% endmacro %}
-    
+
     {% macro draw_calendar_style2(bottom_calendar_color) %}
       {"df": [0, 0, 9, 8, {{ bottom_calendar_color }}]},
       {"dl": [1, 0, 2, 0, [0, 0, 0]]},
       {"dl": [6, 0, 7, 0, [0, 0, 0]]},
     {% endmacro %}
-    
+
     {
       "draw": [
         {% if marker_bar_position != "never" %}
