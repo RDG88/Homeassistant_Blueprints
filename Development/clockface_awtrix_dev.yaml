@@ -7,7 +7,7 @@ blueprint:
 
     ### Screenshot
 
-      ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_clockface.png)
+      ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_screenshot.svg)
       
     ### Features
 
@@ -72,14 +72,14 @@ blueprint:
       description: >
         Select the position of the weekday bar.  
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_off_tn.png) `Don't show the weekday bar`
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_no-weekbar.svg) `Don't show the weekday bar`
 
           ---
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_above_tn.png) `Show the weekday bar above the time`
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_above-weekbar.svg) `Show the weekday bar above the time`
 
           ---
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_below_tn.png) `Show the weekday bar below the time`
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_below-weekbar.svg) `Show the weekday bar below the time`
 
       selector:
         select:
@@ -172,28 +172,30 @@ blueprint:
     night_mode:
       name: Enables or disables night mode
       description: >
-        Enables or disables night mode
+        This settings allows you to enable or disable night mode.
 
+        ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_night-clock.svg)  
+        
         *Note: If you keep night mode disabled, the settings below won't do anything*
       selector:
         boolean:
       default: false
     wake_up_time:
-      name: Wake up time
-      description: At what time the clock needs to wake up?
+      name: Wake-up time
+      description: At what time the clock needs to wake-up?
       selector:
         time: {}
       default: "08:00:00"
     sleep_time:
       name: Sleep time
-      description: What time the clock goes to Sleep?
+      description: At what time the clock should go to sleep?
       selector:
         time: {}
       default: "23:00:00"
     sleep_settings_atrans:
       name: Enables or disables automatic transition of apps in sleep mode.
       description: >
-        Enables or disables automatic transition of apps in sleep mode.
+        This setting allows you to enable or disable automatic transition of apps in sleep mode.
       selector:
         boolean:
       default: false
@@ -215,7 +217,7 @@ blueprint:
       default: false
     sleep_settings_color:
       name: Color settings for the night clock
-      description: Select the color for the night clock
+      description: This settings allows you to change the color of the night clock.
       selector:
         color_rgb:
       default: [255, 0, 0]
@@ -227,12 +229,12 @@ blueprint:
         boolean:
       default: true
     wakeup_settings_bri:
-      name: Wake up brightness settings (0-255)
+      name: Wake up brightness settings (1-255)
       description: >
-        Adjust the brightness for wake-up mode.
+        This settings allows you to adjust the brightness for wake-up mode, pick a value between 1 and 255.
       selector:
         number:
-          min: 0
+          min: 1
           max: 255
       default: "127"
     wakeup_settings_abri:
@@ -377,8 +379,11 @@ trigger:
   - platform: time
     at: !input sleep_time
     id: sleep_timer
+  - platform: event
+    id: automation_timer
+    event_type:
+      - automation_reloaded
 condition: []
-
 action:
   - repeat:
       for_each: "{{ awtrix_devices }}"
@@ -398,6 +403,7 @@ action:
                         - wakeup_timer
                         - sleep_timer
                         - time_timer
+                        - automation_timer
                   then:
                     - service: mqtt.publish
                       data:
