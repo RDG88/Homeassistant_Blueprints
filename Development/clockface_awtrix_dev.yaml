@@ -108,11 +108,11 @@ blueprint:
       description: >
         Select the calendar style
 
-          ![](https://developer.lametric.com/content/apps/icon_thumbs/11543_icon_thumb.png?v=1) `Calendar Style 1`
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_cal_style1.svg) `Calendar Style 1`
 
           ---
 
-          ![](https://developer.lametric.com/content/apps/icon_thumbs/9916_icon_thumb.png?v=1) `Calendar Style 2`
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/clockface_cal_style2.svg) `Calendar Style 2`
       selector:
         select:
           options:
