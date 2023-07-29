@@ -1,0 +1,81 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="body_1" width="72" height="54">
+
+<g transform="matrix(0.28125 0 0 0.28125 5.625 -0)">
+	<g>
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 0L32 0L32 32L0 32L0 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 0L64 0L64 32L32 32L32 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 0L96 0L96 32L64 32L64 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 0L128 0L128 32L96 32L96 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 0L160 0L160 32L128 32L128 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 0L192 0L192 32L160 32L160 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 0L224 0L224 32L192 32L192 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 0L256 0L256 32L224 32L224 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 0L288 0L288 32L256 32L256 0z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 32L32 32L32 64L0 64L0 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 32L64 32L64 64L32 64L32 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 32L96 32L96 64L64 64L64 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 32L128 32L128 64L96 64L96 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 32L160 32L160 64L128 64L128 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 32L192 32L192 64L160 64L160 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 32L224 32L224 64L192 64L192 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 32L256 32L256 64L224 64L224 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 32L288 32L288 64L256 64L256 32z" stroke="#000000" stroke-width="1" fill="#FF0000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 64L32 64L32 96L0 96L0 64z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 64L64 64L64 96L32 96L32 64z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 64L96 64L96 96L64 96L64 64z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 64L128 64L128 96L96 96L96 64z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 64L160 64L160 96L128 96L128 64z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 64L192 64L192 96L160 96L160 64z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 64L224 64L224 96L192 96L192 64z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 64L256 64L256 96L224 96L224 64z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 64L288 64L288 96L256 96L256 64z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 96L32 96L32 128L0 128L0 96z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 96L64 96L64 128L32 128L32 96z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 96L96 96L96 128L64 128L64 96z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 96L128 96L128 128L96 128L96 96z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 96L160 96L160 128L128 128L128 96z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 96L192 96L192 128L160 128L160 96z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 96L224 96L224 128L192 128L192 96z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 96L256 96L256 128L224 128L224 96z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 96L288 96L288 128L256 128L256 96z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 128L32 128L32 160L0 160L0 128z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 128L64 128L64 160L32 160L32 128z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 128L96 128L96 160L64 160L64 128z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 128L128 128L128 160L96 160L96 128z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 128L160 128L160 160L128 160L128 128z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 128L192 128L192 160L160 160L160 128z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 128L224 128L224 160L192 160L192 128z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 128L256 128L256 160L224 160L224 128z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 128L288 128L288 160L256 160L256 128z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 160L32 160L32 192L0 192L0 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 160L64 160L64 192L32 192L32 160z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 160L96 160L96 192L64 192L64 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 160L128 160L128 192L96 192L96 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 160L160 160L160 192L128 192L128 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 160L192 160L192 192L160 192L160 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 160L224 160L224 192L192 192L192 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 160L256 160L256 192L224 192L224 160z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 160L288 160L288 192L256 192L256 160z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 192L32 192L32 224L0 224L0 192z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 192L64 192L64 224L32 224L32 192z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 192L96 192L96 224L64 224L64 192z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 192L128 192L128 224L96 224L96 192z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 192L160 192L160 224L128 224L128 192z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 192L192 192L192 224L160 224L160 192z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 192L224 192L224 224L192 224L192 192z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 192L256 192L256 224L224 224L224 192z" stroke="#000000" stroke-width="1" fill="#000000" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 192L288 192L288 224L256 224L256 192z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M0 224L32 224L32 256L0 256L0 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M32 224L64 224L64 256L32 256L32 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M64 224L96 224L96 256L64 256L64 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M96 224L128 224L128 256L96 256L96 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M128 224L160 224L160 256L128 256L128 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M160 224L192 224L192 256L160 256L160 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M192 224L224 224L224 256L192 256L192 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M224 224L256 224L256 256L224 256L224 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+        <path transform="matrix(0.75 0 0 0.75 0 0)"  d="M256 224L288 224L288 256L256 256L256 224z" stroke="#000000" stroke-width="1" fill="#FFFFFF" fill-rule="nonzero" />
+	</g>
+</g>
+</svg>
