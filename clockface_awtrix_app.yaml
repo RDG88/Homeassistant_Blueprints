@@ -5,6 +5,10 @@ blueprint:
 
     This blueprint provides a custom clockface for the AWTRIX Light. It allows you to personalize various aspects of the clockface to suit your preferences.
 
+    ## Deprecated
+
+    Since this blueprint is now native implemented in AWTRIX v0.72, this blueprint will not recieve any updates anyore.
+
     ### Screenshot
 
       ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/screenshot_clockface.png)
