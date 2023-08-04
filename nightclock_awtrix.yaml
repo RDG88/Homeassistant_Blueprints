@@ -157,23 +157,23 @@ blueprint:
       description: >
         Select the time/calendar style
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-0.svg) `Calendar Style 0`   
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-0.svg) `Style 0`   
 
           ---
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-1.svg) `Calendar Style 1`   
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-1.svg) `Style 1`   
 
           ---
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-2.svg) `Calendar Style 2`   
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-2.svg) `Style 2`   
 
           ---
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-3.svg) `Calendar Style 3`   
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-3.svg) `Style 3`   
 
           ---
 
-          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-4.svg) `Calendar Style 4`
+          ![](https://raw.githubusercontent.com/RDG88/Homeassistant_Blueprints/main/thumbnails/tmode-4.svg) `Style 4`
 
       selector:
         select:
