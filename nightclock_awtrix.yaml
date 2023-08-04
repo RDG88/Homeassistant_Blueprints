@@ -79,6 +79,30 @@ blueprint:
       selector:
         boolean:
       default: false
+    sleep_time_format:
+      name: Select the time format for the night mode clock
+      description: >
+        Select the time format for the night mode clock
+      selector:
+        select:
+          options:
+            - label: '13:30:45'
+              value: '%H:%M:%S'
+            - label: '1:30:45'
+              value: '%l:%M:%S'
+            - label: '13:30'
+              value: '%H:%M'
+            - label: '13.30 with blinking colon'
+              value: '%H %M'
+            - label: '1:30'
+              value: '%l:%M'
+            - label: '1:30 with blinking colon'
+              value: '%l %M'
+            - label: '1:30 PM'
+              value: '%l:%M %p'
+            - label: '1:30 PM with blinking colon'
+              value: '%l %M %p'
+      default: '%H:%M'
 
     wakeup_settings_atrans:
       name: Enables or disables automatic transition of apps in day mode?
@@ -112,6 +136,13 @@ blueprint:
       selector:
         color_rgb:
       default: [255, 255, 255]
+
+    wakeup_settings_calendar_color:
+      name: Color settings for the day mode calendar
+      description: This settings allows you to change the color of the day mode calendar.
+      selector:
+        color_rgb:
+      default: [255, 0, 0]
 
     wakeup_weekday_bar:
       name: Enables or disables the weekday bar for the day mode clock
@@ -159,6 +190,31 @@ blueprint:
               value: "4"
       default: "1"
 
+    wakeup_time_format:
+      name: Select the time format for the day mode clock
+      description: >
+        Select the time format for the day mode clock
+      selector:
+        select:
+          options:
+            - label: '13:30:45'
+              value: '%H:%M:%S'
+            - label: '1:30:45'
+              value: '%l:%M:%S'
+            - label: '13:30'
+              value: '%H:%M'
+            - label: '13.30 with blinking colon'
+              value: '%H %M'
+            - label: '1:30'
+              value: '%l:%M'
+            - label: '1:30 with blinking colon'
+              value: '%l %M'
+            - label: '1:30 PM'
+              value: '%l:%M %p'
+            - label: '1:30 PM with blinking colon'
+              value: '%l %M %p'
+      default: '%H:%M'
+
 variables:
   device_ids: !input awtrix
   wake_up_time: !input wake_up_time
@@ -171,9 +227,12 @@ variables:
   sleep_settings_color: !input sleep_settings_color
   sleep_settings_abri: !input sleep_settings_abri
   sleep_settings_bri: !input sleep_settings_bri
+  sleep_time_format: !input sleep_time_format
   wakeup_settings_bri: !input wakeup_settings_bri
   wakeup_settings_abri: !input wakeup_settings_abri
   wakeup_calendar_style: !input wakeup_calendar_style
+  wakeup_settings_calendar_color: !input wakeup_settings_calendar_color
+  wakeup_time_format: !input wakeup_time_format
   awtrix_devices: >-
     {%- set ns = namespace(awtrix = []) -%}
     {%- for device_id in device_ids -%}
@@ -192,6 +251,7 @@ variables:
       "BRI": {{ sleep_settings_bri }}, 
       "ABRI": {{ sleep_settings_abri | lower }},
       "TMODE": 0,
+      "TFORMAT": "{{ sleep_time_format }}",
       "WD": {{ sleep_weekday_bar | lower }},
       "TIME_COL": {{ sleep_settings_color }}
     }
@@ -199,7 +259,9 @@ variables:
     { "ATRANS": {{ wakeup_settings_atrans | lower }}, 
       "BRI": {{ wakeup_settings_bri }}, 
       "ABRI": {{ wakeup_settings_abri | lower }},
-      "TMODE" : {{ wakeup_calendar_style }},
+      "CCOL": {{ wakeup_settings_calendar_color }},
+      "TMODE": {{ wakeup_calendar_style }},
+      "TFORMAT": "{{ wakeup_time_format }}",
       "WD": {{ wakeup_weekday_bar | lower }},
       "TIME_COL": {{ wakeup_settings_color }}
     }
