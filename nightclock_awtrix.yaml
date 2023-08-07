@@ -44,7 +44,7 @@ blueprint:
       default: "08:00:00"
 
     sleep_settings_atrans:
-      name: Enable automatic app transitiona in night mode.
+      name: Enable automatic app transition in night mode.
       description: >
         This setting allows you to enable or disable automatic transition of apps in night mode.
       selector:
