@@ -11,7 +11,7 @@ blueprint:
         device:
           filter:
             - integration: mqtt
-              manufacturer: Blueforcer.
+              manufacturer: Blueforcer
               model: AWTRIX Light
           multiple: false
     reboot_helper:
