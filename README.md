@@ -1,4 +1,4 @@
-These blueprints are primarily created for the fantastic AWTRIX Light project.
+These blueprints are primarily created for the fantastic [AWTRIX Light project](https://github.com/Blueforcer/awtrix-light).
 
 
 
