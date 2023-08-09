@@ -1,10 +1,8 @@
-# Homeassistant_Blueprints
-
 These blueprints are primarily created for the fantastic AWTRIX Light project.
 
 
 
-# HomeAssistant
+# HomeAssistant - AWTRIX Blueprints
 
 |Blueprint|Description|Import|
 |-----------|-----------|-------|
