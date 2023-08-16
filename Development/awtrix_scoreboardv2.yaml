@@ -1,0 +1,142 @@
+blueprint:
+  name: "AWTRIX - NFL Team Scoreboard"
+  author: Hank_the_Tank
+  description: >
+    # NFL Team Scoreboard for AWTRIX Light
+
+
+
+    ### Screenshots
+
+      ![](https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/screenshot.svg)
+
+      ![](https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/screenshot2.svg)
+
+      ![](https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/screenshot3.svg)
+      
+
+
+    ### Prerequisites
+
+    **Before** using this blueprint, ensure that you have **HACS** installed. You also need the ha-teamtracker integration [here](https://github.com/vasqued2/ha-teamtracker).
+
+    ### Credits
+
+  domain: automation
+
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          filter:
+            - integration: mqtt
+              manufacturer: Blueforcer
+              model: AWTRIX Light
+          multiple: true
+
+    appname:
+      name: Awtrix Application name
+      description: This is the app name listed in the MQTT topic - it should be unique
+      default: "nflteamscore"
+      selector:
+        text:
+
+    my_sensor:
+      name: Football Sensor
+      description: Select your Football Team Sensor
+      selector:
+        entity:
+          filter:
+            - integration: teamtracker
+
+  source_url: https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/Scoreboard_Automation.yaml
+
+variables:
+  device_ids: !input awtrix
+  devices: >-
+    {% macro get_device(device_id) %}
+      {{ states((device_entities(device_id) | select('search','device_topic') | list)[0] | default('unknown')) }}
+    {% endmacro %}
+    {% set ns = namespace(devices=[]) %}
+    {% for device_id in device_ids %}
+      {% set device=get_device(device_id)|replace(' ','')|replace('\n','') %}
+      {% set ns.devices = ns.devices + [ device ] %}
+    {% endfor %}
+    {{ ns.devices | reject('match','unavailable|unknown') | list }}
+  appname: !input appname
+  my_sensor: !input my_sensor
+  team_colors_0: "{{ state_attr(my_sensor, 'team_colors')[0] }}"
+  team_colors_1: "{{ state_attr(my_sensor, 'team_colors')[1] }}"
+  opponent_colors_0: "{{ state_attr(my_sensor, 'opponent_colors')[0] }}"
+  opponent_colors_1: "{{ state_attr(my_sensor, 'opponent_colors')[1] }}"
+  team_score: >-
+    {% set raw_team_score = state_attr(my_sensor, 'team_score') %}
+    {% if raw_team_score|int < 10 %}
+      {{  "0" + raw_team_score|string }}
+    {% else %}
+        {{ raw_team_score|string }}
+    {% endif %}
+  opponent_score: >-
+    {% set raw_opponent_score = state_attr(my_sensor, 'opponent_score') %}
+    {% if raw_opponent_score|int < 10 %}
+        {{ "0" + raw_opponent_score|string }}
+    {% else %}
+        {{ raw_opponent_score|string }}
+    {% endif %}
+
+  payload_switch: >-
+    {
+      "name" : "{{ appname }}"
+    }
+  payload_game_start: >-
+    {
+      "draw":[ 
+        {"df":[0,0,16,8,"{{ team_colors_0 }}"]},     
+        {"df":[16,0,16,8,"{{ opponent_colors_0 }}"]}, 
+        {"dl":[1,0,1,7,"{{ team_colors_1 }}"]},
+        {"dl":[3,0,3,7,"{{ team_colors_1 }}"]},
+        {"dl":[28,0,28,7,"{{ opponent_colors_1 }}"]}, 
+        {"dl":[30,0,30,7,"{{ opponent_colors_1 }}"]}, 
+        {"dp":[12,7,"#ffffff"]}, 
+        {"dp":[14,7,"#919191"]},
+        {"dp":[17,7,"#919191"]}, 
+        {"dp":[19,7,"#919191"]}, 
+        {"dt":[7, 1, "{{ team_score }}",[255,255,255]]}, 
+        {"dt":[18, 1, "{{ opponent_score }}",[255,255,255]]}, 
+        {"dl":[15,3,16,3,"#ffffff"]} 
+      ], 
+      "duration": 15 
+    }
+trigger:
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    to: IN
+    id: Game Start
+condition: []
+action:
+  - repeat:
+      for_each: "{{ devices }}"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: trigger
+                  id:
+                    - Game Start
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item }}/custom/{{ appname }}"
+                    payload: "{{ payload_game_start }}"
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item }}/switch"
+                    payload: "{{ payload_switch }}"
+
+mode: restart
