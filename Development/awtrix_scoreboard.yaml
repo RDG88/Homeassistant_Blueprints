@@ -1,0 +1,420 @@
+blueprint:
+  name: "AWTRIX - NFL Team Scoreboard"
+  author: Hank_the_Tank
+  description: >
+    # NFL Team Scoreboard for AWTRIX Light
+
+
+
+    ### Screenshots
+
+      ![](https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/screenshot.svg)
+
+      ![](https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/screenshot2.svg)
+
+      ![](https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/screenshot3.svg)
+      
+
+
+    ### Prerequisites
+
+    **Before** using this blueprint, ensure that you have **HACS** installed. You also need the ha-teamtracker integration [here](https://github.com/vasqued2/ha-teamtracker).
+
+    ### Credits
+
+  domain: automation
+
+  input:
+    awtrix:
+      name: AWTRIX Light
+      description: Select the Awtrix light
+      selector:
+        device:
+          integration: mqtt
+          model: "AWTRIX Light"
+          manufacturer: Blueforcer
+          multiple: true
+
+    appname:
+      name: Awtrix Application name
+      description: This is the app name listed in the MQTT topic - it should be unique
+      default: "nflteamscore"
+      selector:
+        text:
+
+    my_sensor:
+      name: Football Sensor
+      description: Select your Football Team Sensor
+      selector:
+        entity:
+          filter:
+            - integration: teamtracker
+
+  source_url: https://raw.githubusercontent.com/fettesb/Homeassistant_blueprints/main/Scoreboard_Automation.yaml
+
+variables:
+  device_ids: !input awtrix
+  devices: >-
+    {% macro get_device(device_id) %}
+      {{ states((device_entities(device_id) | select('search','device_topic') | list)[0] | default('unknown')) }}
+    {% endmacro %}
+
+    {% set ns = namespace(devices=[]) %}
+    {% for device_id in device_ids %}
+      {% set device=get_device(device_id)|replace(' ','')|replace('\n','') %}
+      {% set ns.devices = ns.devices + [ device ] %}
+    {% endfor %}
+    {{ ns.devices | reject('match','unavailable|unknown') | list }}
+  appname: !input appname
+  my_sensor: !input my_sensor
+  awtrix: !input awtrix
+
+  payload_game_start: >-
+    {% set team_colors_0 = {{ state_attr(my_sensor, 'team_colors')[0] }} %}
+    {% set team_colors_1 = {{ state_attr(my_sensor, 'team_colors')[1] }} %}
+    {% set opponent_colors_0 = {{ state_attr(my_sensor, 'opponent_colors')[0] }} %}
+    {% set opponent_colors_1 = {{ state_attr(my_sensor, 'opponent_colors')[1] }} %}
+    {% set team_score = {{ state_attr(my_sensor, 'team_score') }}  %}
+    {% set opponent_score = {{ state_attr(my_sensor, 'opponent_score') }}  %}
+
+    {  "draw":[ 
+      {"df":[0,0,16,8,"{{ team_colors_0 }}"]},     
+      {"df":[16,0,16,8,"{{ opponent_colors_0 }}"]}, 
+      {"dl":[1,0,1,7,"{{ team_colors_1 }}"]},
+      {"dl":[3,0,3,7,"{{ team_colors_1 }}"]},
+      {"dl":[28,0,28,7,"{{ opponent_colors_1 }}"]}, 
+      {"dl":[30,0,30,7,"{{ opponent_colors_1 }}"]}, 
+      {"dp":[12,7,"#ffffff"]}, 
+      {"dp":[14,7,"#919191"]},
+      {"dp":[17,7,"#919191"]}, 
+      {"dp":[19,7,"#919191"]}, 
+      {"dt":[7, 1,"{{ "0" +  team_score | string if team_score | int < 10 else team_score }}",[255,255,255]]}, 
+      {"dt":[18, 1, "{{ "0" + {{ opponent_score }} | string if opponent_score | int < 10 else opponent_score }}",[255,255,255]]}, 
+      {"dl":[15,3,16,3,"#ffffff"]} ], 
+      "duration": 15 
+    }
+trigger:
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    to: IN
+    id: Game Start
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    id: Game End
+    to: POST
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    attribute: team_score
+    id: Team Score Change
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    attribute: opponent_score
+    id: Opponent Score Change
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    attribute: quarter
+    id: 1 Quarter
+    to: "1"
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    attribute: quarter
+    id: 2 Quarter
+    to: "2"
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    attribute: quarter
+    id: 3 Quarter
+    to: "3"
+  - platform: state
+    entity_id:
+      - !input my_sensor
+    attribute: quarter
+    id: 4 Quarter
+    to: "4"
+condition: []
+action:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id:
+              - Game Start
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: "{{ payload_game_start }}"
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/switch"
+              payload: '{"name":"nflteamscore"}'
+      - conditions:
+          - condition: trigger
+            id:
+              - Game End
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+      - conditions:
+          - condition: trigger
+            id:
+              - Team Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 0
+            below: 2
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  
+                "draw":[ {"df":[0,0,16,8,"{{states.denver_football.attributes.team_colors[0]}}"]},     
+                {"df":[16,0,16,8,"{{states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                {"dl":[1,0,1,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                {"dl":[3,0,3,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                {"dl":[28,0,28,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                {"dl":[30,0,30,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                {"dp":[12,7,"#ffffff"]}, 
+                {"dp":[14,7,"#919191"]},
+                {"dp":[17,7,"#919191"]}, 
+                {"dp":[19,7,"#919191"]}, 
+                {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score }}",[255,255,255]]}, 
+                {"dt":[18, 1, "{{ "0" +states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score}}",[255,255,255]]}, 
+                {"dl":[15,3,16,3,"#ffffff"]} ], "duration":15 }
+      - conditions:
+          - condition: trigger
+            id:
+              - Team Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 1
+            below: 3
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  "draw":[ 
+                  {"df":[0,0,16,8,"{{states.denver_football.attributes.team_colors[0]}}"]},     
+                  {"df":[16,0,16,8,"{{states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                  {"dl":[1,0,1,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[3,0,3,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[28,0,28,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dl":[30,0,30,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dp":[12,7,"#ffffff"]}, 
+                  {"dp":[14,7,"#ffffff"]},
+                  {"dp":[17,7,"#919191"]}, 
+                  {"dp":[19,7,"#919191"]}, 
+                  {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score}}",[255,255,255]]}, 
+                  {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score}}",[255,255,255]]}, 
+                  {"dl":[15,3,16,3,"#ffffff"]} ], 
+                  "duration": 15 
+                }
+      - conditions:
+          - condition: trigger
+            id:
+              - Team Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 2
+            below: 4
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  
+                  "draw":[ {"df":[0,0,16,8,"{{states.denver_football.attributes.team_colors[0] }}"]},     
+                  {"df":[16,0,16,8,"{{states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                  {"dl":[1,0,1,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[3,0,3,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[28,0,28,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dl":[30,0,30,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dp":[12,7,"#ffffff"]}, 
+                  {"dp":[14,7,"#ffffff"]},
+                  {"dp":[17,7,"#ffffff"]}, 
+                  {"dp":[19,7,"#919191"]}, 
+                  {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score}}",[255,255,255]]}, 
+                  {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score}}",[255,255,255]]}, 
+                  {"dl":[15,3,16,3,"#ffffff"]} ], 
+                "duration": 15 
+                }
+      - conditions:
+          - condition: trigger
+            id:
+              - Team Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 3
+            below: 5
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  "draw":[ {"df":[0,0,16,8,"{{states.denver_football.attributes.team_colors[0]}}"]},     
+                {"df":[16,0,16,8,"{{states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                {"dl":[1,0,1,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                {"dl":[3,0,3,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                {"dl":[28,0,28,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                {"dl":[30,0,30,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                {"dp":[12,7,"#ffffff"]}, 
+                {"dp":[14,7,"#ffffff"]},
+                {"dp":[17,7,"#ffffff"]}, 
+                {"dp":[19,7,"#ffffff"]}, 
+                {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score }}",[255,255,255]]}, 
+                {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score }}",[255,255,255]]}, 
+                {"dl":[15,3,16,3,"#ffffff"]} ], 
+                "duration": 15 
+                }
+      - conditions:
+          - condition: trigger
+            id:
+              - Opponent Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 0
+            below: 2
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  "draw":[ {"df":[0,0,16,8,"{{ states.denver_football.attributes.team_colors[0]}}"]},     
+                {"df":[16,0,16,8,"{{ states.denver_football.attributes.opponent_colors[0] }}"]}, 
+                {"dl":[1,0,1,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                {"dl":[3,0,3,7,"{{ states.denver_football.attributes.team_colors[1] }}"]},
+                {"dl":[28,0,28,7,"{{ states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                {"dl":[30,0,30,7,"{{ states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                {"dp":[12,7,"#ffffff"]}, 
+                {"dp":[14,7,"#919191"]},
+                {"dp":[17,7,"#919191"]}, 
+                {"dp":[19,7,"#919191"]}, 
+                {"dt":[7, 1, "{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score }}",[255,255,255]]}, 
+                {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score }}",[255,255,255]]}, 
+                {"dl":[15,3,16,3,"#ffffff"]} ], 
+                "duration": 15 }
+      - conditions:
+          - condition: trigger
+            id:
+              - Opponent Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 1
+            below: 3
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  
+                  "draw":[ {"df":[0,0,16,8,"{{ states.denver_football.attributes.team_colors[0]}}"]},     
+                  {"df":[16,0,16,8,"{{ states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                  {"dl":[1,0,1,7,"{{ states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[3,0,3,7,"{{ states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[28,0,28,7,"{{ states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dl":[30,0,30,7,"{{ states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dp":[12,7,"#ffffff"]}, 
+                  {"dp":[14,7,"#ffffff"]},
+                  {"dp":[17,7,"#919191"]}, 
+                  {"dp":[19,7,"#919191"]}, 
+                  {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score }}",[255,255,255]]}, {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score }}",[255,255,255]]}, 
+                  {"dl":[15,3,16,3,"#ffffff"]} ], 
+                  "duration": 15 }
+      - conditions:
+          - condition: trigger
+            id:
+              - Opponent Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 2
+            below: 4
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  
+                  "draw":[ {"df":[0,0,16,8,"{{ states.denver_football.attributes.team_colors[0] }}"]},     
+                  {"df":[16,0,16,8,"{{states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                  {"dl":[1,0,1,7,"{{ states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[3,0,3,7,"{{ states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[28,0,28,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dl":[30,0,30,7,"{{ states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dp":[12,7,"#ffffff"]}, 
+                  {"dp":[14,7,"#ffffff"]},
+                  {"dp":[17,7,"#ffffff"]}, 
+                  {"dp":[19,7,"#919191"]}, 
+                  {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score}}",[255,255,255]]}, 
+                  {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score }}",[255,255,255]]}, 
+                  {"dl":[15,3,16,3,"#ffffff"]} ],
+                  "duration": 15 
+                }
+      - conditions:
+          - condition: trigger
+            id:
+              - Opponent Score Change
+          - condition: numeric_state
+            entity_id: !input my_sensor
+            attribute: quarter
+            above: 3
+            below: 5
+        sequence:
+          - service: mqtt.publish
+            data:
+              qos: 0
+              retain: false
+              topic: "{{awtrix}}/custom/{{appname}}"
+              payload: >-
+                {  "draw":[ 
+                  {"df":[0,0,16,8,"{{states.denver_football.attributes.team_colors[0]}}"]},     
+                  {"df":[16,0,16,8,"{{states.denver_football.attributes.opponent_colors[0]}}"]}, 
+                  {"dl":[1,0,1,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[3,0,3,7,"{{states.denver_football.attributes.team_colors[1] }}"]},
+                  {"dl":[28,0,28,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dl":[30,0,30,7,"{{states.denver_football.attributes.opponent_colors[1]}}"]}, 
+                  {"dp":[12,7,"#ffffff"]}, 
+                  {"dp":[14,7,"#ffffff"]},
+                  {"dp":[17,7,"#ffffff"]}, 
+                  {"dp":[19,7,"#ffffff"]}, 
+                  {"dt":[7, 1,"{{ "0" + states.denver_football.attributes.team_score | string if states.denver_football.attributes.team_score | int < 10 else states.denver_football.attributes.team_score }}",[255,255,255]]}, 
+                  {"dt":[18, 1, "{{ "0" + states.denver_football.attributes.opponent_score | string if states.denver_football.attributes.opponent_score | int < 10 else states.denver_football.attributes.opponent_score }}",[255,255,255]]}, 
+                  {"dl":[15,3,16,3,"#ffffff"]} ], 
+                  "duration": 15 
+                }
+mode: restart
