@@ -9,10 +9,11 @@ blueprint:
       description: Select the Awtrix light
       selector:
         device:
-          integration: mqtt
-          manufacturer: Blueforcer
-          model: AWTRIX Light
-          multiple: false
+          filter:
+            - integration: mqtt
+              manufacturer: Blueforcer
+              model: AWTRIX Light
+          multiple: true
     awtrix_app_name:
       name: AWTRIX Application name
       description: This is the custom app name that will be added to AWTRIX, should be unique
@@ -70,12 +71,9 @@ blueprint:
       description: Removes the custom app when there is no update after the given time in seconds. Keep this value higher than 59 seconds to get the AWTRIX app automatically deleted when disabling the automation.
       default: "70"
 
-
 variables:
-  device_id: !input awtrix
-  awtrix: "{{ iif( device_attr(device_id, 'name_by_user') != none, device_attr(device_id,'name_by_user'), device_attr(device_id, 'name') ) }}"
+  device_ids: !input awtrix
   app: !input awtrix_app_name
-  message_topic: "{{awtrix ~ '/custom/' ~ app }}"
   icon: !input bitcoin_icon
   txt_color_bitcoin: !input txt_color_bitcoin
   sensor_bitcoin: !input bitcoin_sensor
@@ -83,31 +81,47 @@ variables:
   duration: !input duration
   repeat: !input repeat
   lifetime: !input lifetime
-
+  awtrix_devices: >-
+    {%- set ns = namespace(awtrix = []) -%}
+    {%- for device_id in device_ids -%}
+      {%- set device_name = iif(device_attr(device_id, 'name_by_user') != none, device_attr(device_id, 'name_by_user'), device_attr(device_id, 'name')) -%}
+      {%- set entity = expand(device_entities(device_id)) | select('search', 'device_topic') | map(attribute='entity_id') | first -%}
+      {%- set topic = states(entity) -%}
+      {% set ns.awtrix = ns.awtrix + [{"device": device_name, "entity": entity, "topic": topic}] -%}
+    {%- endfor -%}
+    {{ ns.awtrix }}
 trigger:
   - platform: state
     entity_id:
       - !input bitcoin_sensor
   - platform: time_pattern
     seconds: /59
-condition:
-  - condition: not
-    conditions:
-      - condition: state
-        entity_id: !input bitcoin_sensor
-        state: unavailable
 action:
-  - service: mqtt.publish
-    data:
-      topic: "{{ message_topic }}"
-      payload: |-
-        {   
-          "text": "{{ states(sensor_bitcoin) | round(0) }}",
-          "color": {{ txt_color_bitcoin }},
-          "icon": "{{ icon }}",
-          "pushIcon": {{ push_icon }},
-          "duration": {{ duration }},
-          "lifetime": {{ lifetime }}
-        }
+  - repeat:
+      for_each: "{{ awtrix_devices }}"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: >
+                      {{ states(repeat.item.entity) not in ['unavailable', 'unknown'] }}
+                - condition: template
+                  value_template: >
+                      {{ states(sensor_bitcoin) not in ['unavailable', 'unknown'] }}
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    qos: 0
+                    retain: false
+                    topic: "{{ repeat.item.topic ~ '/custom/' ~ app }}"
+                    payload: |
+                      {   
+                        "text": "{{ states(sensor_bitcoin) | round(0) }}",
+                        "color": {{ txt_color_bitcoin }},
+                        "icon": "{{ icon }}",
+                        "pushIcon": {{ push_icon }},
+                        "duration": {{ duration }},
+                        "lifetime": {{ lifetime }}
+                      }
 
 mode: restart
