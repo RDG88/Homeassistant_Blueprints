@@ -25,16 +25,12 @@ blueprint:
       selector:
         entity:
           multiple: false
-          filter:
-            - integration: moonraker
     3dprint_current_state_sensor:
       name: 3D Print Current Print State Sensor
       description: 3D Print Current Print State sensor
       selector:
         entity:
           multiple: false
-          filter:
-            - integration: moonraker
     3dprint_icon:
       name: Icon
       description: Enter the Icon Name or ID of the icon that you like to show.
