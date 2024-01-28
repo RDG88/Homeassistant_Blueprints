@@ -1,0 +1,122 @@
+type: vertical-stack
+cards:
+  - type: custom:mushroom-title-card
+    title: AWTRIX2
+    subtitle: Huiskamer
+    alignment: center
+  - type: horizontal-stack
+    cards:
+      - type: custom:awtrix-light-display-card
+        sensor: sensor.awtrix2_screen
+        resolution: 256x64
+        matrix_padding: 1
+        border_radius: 10
+        border_width: 3
+        border_color: white
+  - square: false
+    columns: 3
+    type: grid
+    cards:
+      - type: custom:mushroom-entity-card
+        entity: button.awtrix2_previous_app
+        icon: ''
+        name: Prev. app
+        secondary_info: none
+        tap_action:
+          action: toggle
+        fill_container: false
+      - type: custom:mushroom-entity-card
+        entity: light.awtrix2_matrix
+        icon_color: yellow
+        tap_action:
+          action: toggle
+        name: awtrix2
+      - type: custom:mushroom-entity-card
+        entity: button.awtrix2_next_app
+        secondary_info: none
+        tap_action:
+          action: toggle
+        name: Next app
+      - type: custom:mushroom-light-card
+        entity: light.awtrix2_indicator_1
+        use_light_color: true
+        name: Indicator
+        secondary_info: none
+        tap_action:
+          action: toggle
+        show_color_temp_control: true
+      - type: custom:mushroom-light-card
+        entity: light.awtrix2_indicator_2
+        use_light_color: true
+        name: Indicator
+        secondary_info: none
+        tap_action:
+          action: toggle
+        show_color_temp_control: true
+      - type: custom:mushroom-light-card
+        entity: light.awtrix2_indicator_3
+        use_light_color: true
+        name: Indicator
+        secondary_info: none
+        tap_action:
+          action: toggle
+        show_color_temp_control: true
+        show_color_control: false
+        show_brightness_control: false
+        collapsible_controls: false
+      - type: custom:mushroom-entity-card
+        entity: select.awtrix2_brightness_mode
+        name: Bright.
+      - type: custom:mushroom-entity-card
+        entity: button.awtrix2_start_update
+        name: Update
+        secondary_info: none
+        tap_action:
+          action: toggle
+      - type: custom:mushroom-entity-card
+        entity: switch.awtrix2_transition
+        fill_container: false
+        name: Trans.
+        primary_info: name
+        secondary_info: state
+        icon_type: icon
+        tap_action:
+          action: toggle
+      - type: custom:mushroom-entity-card
+        entity: sensor.awtrix2_current_app
+        name: Curr. App
+        icon_color: cyan
+        tap_action:
+          action: more-info
+      - type: custom:mushroom-entity-card
+        entity: sensor.awtrix2_illuminance
+        name: Lux
+        icon_color: cyan
+        tap_action:
+          action: more-info
+      - type: custom:mushroom-entity-card
+        entity: sensor.awtrix2_version
+        icon_color: cyan
+        tap_action:
+          action: more-info
+        name: Version
+      - type: custom:mushroom-entity-card
+        entity: sensor.awtrix2_device_topic
+        name: Topic
+      - type: custom:mushroom-entity-card
+        entity: script.awtrix2_reboot
+        name: Reboot
+        tap_action:
+          action: toggle
+        secondary_info: none
+        icon_color: deep-orange
+      - type: custom:mushroom-entity-card
+        entity: sensor.awtrix2_free_ram
+        name: Ram
+      - type: custom:mushroom-select-card
+        entity: select.awtrix2_transition_effect
+        name: Effect
+        secondary_info: none
+      - type: custom:mushroom-entity-card
+        entity: sensor.awtrix2_uptime
+        name: Uptime
