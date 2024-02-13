@@ -115,7 +115,7 @@ blueprint:
     wakeup_settings_bri:
       name: Day mode brightness setting (1-255)
       description: >
-        This settings allows you to adjust the brightness for day mode, pick a value between 1 and 255.
+        This setting allows you to adjust the brightness for day mode, pick a value between 1 and 255.
       selector:
         number:
           min: 1
@@ -132,14 +132,14 @@ blueprint:
 
     wakeup_settings_color:
       name: Color setting for the day mode clock
-      description: This settings allows you to change the color of the day mode clock.
+      description: This setting allows you to change the color of the day mode clock.
       selector:
         color_rgb:
       default: [255, 255, 255]
 
     wakeup_settings_calendar_color:
       name: Color setting for the day mode calendar
-      description: This settings allows you to change the color of the day mode calendar.
+      description: This setting allows you to change the color of the day mode calendar.
       selector:
         color_rgb:
       default: [255, 0, 0]
@@ -267,7 +267,7 @@ variables:
     { "ATRANS": {{ wakeup_settings_atrans | lower }}, 
       "BRI": {{ wakeup_settings_bri }}, 
       "ABRI": {{ wakeup_settings_abri | lower }},
-      "CCOL": {{ wakeup_settings_calendar_color }},
+      "CHCOL": {{ wakeup_settings_calendar_color }},
       "CTCOL": {{ wakeup_settings_calendar_text_color }},
       "TMODE": {{ wakeup_calendar_style }},
       "TFORMAT": "{{ wakeup_time_format }}",
