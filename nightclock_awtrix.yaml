@@ -252,7 +252,7 @@ variables:
     {{ ns.awtrix }}
   payload_sleep_switch: >-
     {
-      "name": "time"
+      "name": "Time"
     }
   payload_sleep_settings: >-
     { "ATRANS": {{ sleep_settings_atrans | lower }}, 
