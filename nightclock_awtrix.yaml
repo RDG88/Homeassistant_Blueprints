@@ -159,6 +159,21 @@ blueprint:
         boolean:
       default: false
 
+
+    wakeup_active_weekday_maker_color:
+      name: Color setting for the active weekday marker color
+      description: This settings allows you to change the active weekday marker color.
+      selector:
+        color_rgb:
+      default: [255, 255, 255]
+
+    wakeup_inactive_weekday_maker_color:
+      name: Color setting for the inactive weekday marker color
+      description: This settings allows you to change the inactive weekday marker color.
+      selector:
+        color_rgb:
+      default: [192, 192, 192]
+
     wakeup_calendar_style:
       name: Select the time/calendar style for the day mode clock
       description: >
@@ -272,7 +287,9 @@ variables:
       "TMODE": {{ wakeup_calendar_style }},
       "TFORMAT": "{{ wakeup_time_format }}",
       "WD": {{ wakeup_weekday_bar | lower }},
-      "TIME_COL": {{ wakeup_settings_color }}
+      "TIME_COL": {{ wakeup_settings_color }},
+      "WDCA": {{ wakeup_active_weekday_maker_color }},
+      "WDCI": {{ wakeup_inactive_weekday_maker_color }}
     }
 trigger:
   - platform: time
