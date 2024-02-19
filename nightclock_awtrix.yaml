@@ -159,7 +159,6 @@ blueprint:
         boolean:
       default: false
 
-
     wakeup_active_weekday_maker_color:
       name: Color setting for the active weekday marker color
       description: This settings allows you to change the active weekday marker color.
@@ -172,7 +171,7 @@ blueprint:
       description: This settings allows you to change the inactive weekday marker color.
       selector:
         color_rgb:
-      default: [192, 192, 192]
+      default: [55, 57, 59]
 
     wakeup_calendar_style:
       name: Select the time/calendar style for the day mode clock
@@ -255,6 +254,8 @@ variables:
   wakeup_calendar_style: !input wakeup_calendar_style
   wakeup_settings_calendar_color: !input wakeup_settings_calendar_color
   wakeup_settings_calendar_text_color: !input wakeup_settings_calendar_text_color
+  wakeup_inactive_weekday_maker_color: !input wakeup_inactive_weekday_maker_color
+  wakeup_active_weekday_maker_color: !input wakeup_active_weekday_maker_color
   wakeup_time_format: !input wakeup_time_format
   awtrix_devices: >-
     {%- set ns = namespace(awtrix = []) -%}
