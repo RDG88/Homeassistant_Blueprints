@@ -24,10 +24,8 @@ blueprint:
       description: Select the Awtrix light
       selector:
         device:
-          filter:
-            - integration: mqtt
-              manufacturer: Blueforcer
-              model: AWTRIX Light
+          integration: mqtt
+          manufacturer: Blueforcer
           multiple: true
     sleep_time:
       name: Night mode time
