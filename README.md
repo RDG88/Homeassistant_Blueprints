@@ -2,7 +2,7 @@ These blueprints are primarily created for the fantastic [AWTRIX Light project](
 
 
 
-# HomeAssistant - AWTRIX Blueprints
+# Homeassistant - AWTRIX Blueprints
 
 |Blueprint|Description|Import|Flows|
 |---------|-----------|------|-----|
@@ -14,4 +14,8 @@ These blueprints are primarily created for the fantastic [AWTRIX Light project](
 
 
 
-This is a test. 2
+
+
+
+
+
